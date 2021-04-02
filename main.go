@@ -23,13 +23,22 @@ func (c *LRUCache) Get(key string) interface{} {
 
 // adds or updates cache with a new element
 func (c *LRUCache) Set(key string, val interface{}) {
-	ele := c.Recency.PushBack(val)
+	ele := c.Recency.PushFront(val)
 	c.Cache[key] = ele
 }
 
 // returns the actual cache size
 func (c *LRUCache) CurrentSize() int64 {
 	return int64(len(c.Cache))
+}
+
+// internal func to help on tests. It is not design to
+// use outside testing.
+func (c *LRUCache) valuesToSlice() (out []interface{}) {
+	for element := c.Recency.Front(); element != nil; element = element.Next() {
+		out = append(out, element.Value)
+	}
+	return
 }
 
 // returns a properly initialized LRUCache instance
