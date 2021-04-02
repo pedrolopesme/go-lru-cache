@@ -7,7 +7,7 @@ import (
 
 type LRUCache struct {
 	MaxSize int64
-	Cache   map[string]interface{}
+	Cache   map[string]*list.Element
 	Recency *list.List
 }
 
@@ -18,13 +18,13 @@ func (c *LRUCache) Get(key string) interface{} {
 		return nil
 	}
 
-	return element
+	return element.Value
 }
 
 // adds or updates cache with a new element
 func (c *LRUCache) Set(key string, val interface{}) {
-	c.Recency.PushBack(key)
-	c.Cache[key] = val
+	ele := c.Recency.PushBack(val)
+	c.Cache[key] = ele
 }
 
 // returns the actual cache size
@@ -40,7 +40,7 @@ func NewLRUCache(size int64) (*LRUCache, error) {
 
 	return &LRUCache{
 		MaxSize: size,
-		Cache:   make(map[string]interface{}, size),
+		Cache:   make(map[string]*list.Element, size),
 		Recency: list.New(),
 	}, nil
 }
