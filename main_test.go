@@ -27,3 +27,9 @@ func TestLRUCache_WhenSetsAnElement_ThenItShouldBeAbleToGetThatElement(t *testin
 	cache.Set("one", 1)
 	assert.Equal(t, 1, cache.Get("one"))
 }
+
+func TestLRUCache_WhenGetsAnElementNotInCache_ThenItShouldReturnNil(t *testing.T) {
+	expectedSize := int64(2)
+	cache, _ := NewLRUCache(expectedSize)
+	assert.Equal(t, nil, cache.Get("one"))
+}
