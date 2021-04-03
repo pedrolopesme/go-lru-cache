@@ -12,15 +12,6 @@ func TestLRUCache_WhenItsInitializedWithSize_ThenShouldRespectTheGivenSize(t *te
 	assert.Equal(t, expectedSize, cache.maxSize)
 }
 
-func TestLRUCache_WhenCacheSizeIsReached_ThenShouldDropExtraElements(t *testing.T) {
-	expectedSize := 2
-	cache, _ := NewLRUCache(expectedSize)
-	cache.Set("one", 1)
-	cache.Set("two", 2)
-	cache.Set("three", 3)
-	assert.Equal(t, expectedSize, cache.CurrentSize())
-}
-
 func TestLRUCache_WhenSetsAnElement_ThenItShouldBeAbleToGetThatElement(t *testing.T) {
 	expectedSize := 2
 	cache, _ := NewLRUCache(expectedSize)
@@ -35,7 +26,7 @@ func TestLRUCache_WhenGetsAnElementNotInCache_ThenItShouldReturnNil(t *testing.T
 }
 
 func TestLRUCache_WhenMultipleElementsAreSetInCache_ThenItShouldStoreThemInLifoOrder(t *testing.T) {
-	expectedSize := 2
+	expectedSize := 3
 	cache, _ := NewLRUCache(expectedSize)
 	cache.Set("c", 3)
 	cache.Set("b", 2)
@@ -44,7 +35,7 @@ func TestLRUCache_WhenMultipleElementsAreSetInCache_ThenItShouldStoreThemInLifoO
 }
 
 func TestLRUCache_WhenSetTheSameElementMultipleTimes_ThenItKeepOnlyTheLastVersion(t *testing.T) {
-	expectedSize := 2
+	expectedSize := 3
 	cache, _ := NewLRUCache(expectedSize)
 	cache.Set("a", 3)
 	cache.Set("a", 2)
@@ -55,14 +46,22 @@ func TestLRUCache_WhenSetTheSameElementMultipleTimes_ThenItKeepOnlyTheLastVersio
 }
 
 func TestLRUCache_WhenGetAnItem_ThenItBeMovedToTheFrontOfRecencyQueue(t *testing.T) {
-	expectedSize := 2
+	expectedSize := 3
 	cache, _ := NewLRUCache(expectedSize)
 	cache.Set("c", 3)
 	cache.Set("b", 2)
 	cache.Set("a", 1)
-	assert.Equal(t, 1, cache.recency.Front().Value)
+	assert.Equal(t, 1, cache.recency.Front().Value.(CacheEntry).value)
 
 	cache.Get("c")
-	assert.Equal(t, 3, cache.recency.Front().Value)
+	assert.Equal(t, 3, cache.recency.Front().Value.(CacheEntry).value)
+}
 
+func TestLRUCache_WhenCacheSizeIsReached_ThenShouldDropExtraElements(t *testing.T) {
+	expectedSize := 2
+	cache, _ := NewLRUCache(expectedSize)
+	cache.Set("one", 1)
+	cache.Set("two", 2)
+	cache.Set("three", 3)
+	assert.Equal(t, expectedSize, cache.CurrentSize())
 }
