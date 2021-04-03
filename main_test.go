@@ -65,3 +65,20 @@ func TestLRUCache_WhenCacheSizeIsReached_ThenShouldDropExtraElements(t *testing.
 	cache.Set("three", 3)
 	assert.Equal(t, expectedSize, cache.CurrentSize())
 }
+
+func TestLRUCache_WhenCacheSizeIsReached_ThenShouldDropTheLeastAccessedItem(t *testing.T) {
+	expectedSize := 2
+	cache, _ := NewLRUCache(expectedSize)
+	cache.Set("one", 1)
+	cache.Set("two", 2)
+
+	// accessing the oldest element to avoid loose it
+	cache.Get("one")
+
+	// adding a new item, now two should be removed
+	cache.Set("three", 3)
+
+	assert.Nil(t, cache.Get("two"))
+	assert.Equal(t, 3, cache.recency.Front().Value.(CacheEntry).value)
+	assert.Equal(t, 1, cache.recency.Back().Value.(CacheEntry).value)
+}
