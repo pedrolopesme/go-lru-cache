@@ -53,3 +53,16 @@ func TestLRUCache_WhenSetTheSameElementMultipleTimes_ThenItKeepOnlyTheLastVersio
 	assert.Equal(t, 1, cache.recency.Len())
 	assert.Equal(t, 1, cache.Get("a"))
 }
+
+func TestLRUCache_WhenGetAnItem_ThenItBeMovedToTheFrontOfRecencyQueue(t *testing.T) {
+	expectedSize := 2
+	cache, _ := NewLRUCache(expectedSize)
+	cache.Set("c", 3)
+	cache.Set("b", 2)
+	cache.Set("a", 1)
+	assert.Equal(t, 1, cache.recency.Front().Value)
+
+	cache.Get("c")
+	assert.Equal(t, 3, cache.recency.Front().Value)
+
+}

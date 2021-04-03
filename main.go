@@ -18,6 +18,7 @@ func (c *LRUCache) Get(key string) interface{} {
 		return nil
 	}
 
+	c.cache[key] = c.moveFront(element)
 	return element.Value
 }
 
