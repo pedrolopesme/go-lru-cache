@@ -7,7 +7,7 @@
   <br>
 </h1>
 
-<h4 align="center"> Simple a href="https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)"> LRU cache </a> written in Go that allows you to store any type of element with a string-typed key. </h4>
+<h4 align="center"> Simple <a href="https://en.wikipedia.org/wiki/Cache_replacement_policies#Least_recently_used_(LRU)"> LRU cache </a> written in Go that allows you to store any type of element with a string-typed key. </h4>
 
 <p align="center">
   <a href="https://goreportcard.com/report/github.com/pedrolopesme/go-lru-cache"> <img src="https://goreportcard.com/badge/github.com/pedrolopesme/go-lru-cache" /></a>
