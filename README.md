@@ -89,5 +89,5 @@ BenchmarkLRUCache_HalfSettingHalfGettingKeys_HalfHitsHalfMisses-4   	 4097424	  
 
 ##### profiler
 
-Run CPU and Memory profilers via pprof during a test of 10MM ops on the cache. The current output for both profilers are: [cpu](docs/cpu-profile.pdf) and [memory](memory-profile.pdf). 
+Run CPU and Memory profilers via pprof during a test of 10MM ops on the cache. The current output for both profilers are: [cpu](docs/cpu-profile.pdf) and [memory](docs/mem-profile.pdf). 
 
