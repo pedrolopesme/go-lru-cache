@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -72,7 +73,7 @@ func TestLRUCache_WhenCacheSizeIsReached_ThenShouldDropTheLeastAccessedItem(t *t
 	cache.Set("one", 1)
 	cache.Set("two", 2)
 
-	// accessing the oldest element to avoid loose it
+	// accessing the oldest element to avoid loosing it
 	cache.Get("one")
 
 	// adding a new item, now two should be removed
@@ -81,4 +82,47 @@ func TestLRUCache_WhenCacheSizeIsReached_ThenShouldDropTheLeastAccessedItem(t *t
 	assert.Nil(t, cache.Get("two"))
 	assert.Equal(t, 3, cache.recency.Front().Value.(CacheEntry).value)
 	assert.Equal(t, 1, cache.recency.Back().Value.(CacheEntry).value)
+}
+
+func BenchmarkLRUCache_OnlySettingKeys(b *testing.B) {
+	cache, _ := NewLRUCache(1000)
+	for n := 0; n <= b.N; n++ {
+		cache.Set(fmt.Sprint("key_", n), n)
+	}
+}
+
+func BenchmarkLRUCache_OnlyGettingKeys(b *testing.B) {
+	cache, _ := NewLRUCache(1000)
+	for n := 0; n <= b.N; n++ {
+		cache.Get(fmt.Sprint("key_", n))
+	}
+}
+
+func BenchmarkLRUCache_HalfSettingHalfGettingKeys_AllHits(b *testing.B) {
+	cache, _ := NewLRUCache(1000)
+	for n := 0; n <= b.N; n++ {
+		if n%2 == 0 {
+			cache.Set(fmt.Sprint("key_", n), n)
+		} else {
+			cache.Get(fmt.Sprint("key_", n-1))
+		}
+	}
+}
+
+func BenchmarkLRUCache_HalfSettingHalfGettingKeys_HalfHitsHalfMisses(b *testing.B) {
+	cache, _ := NewLRUCache(1000)
+	hit := false
+	for n := 0; n <= b.N; n++ {
+		if n%2 == 0 {
+			cache.Set(fmt.Sprint("key_", n), n)
+		} else {
+			if hit {
+				cache.Get(fmt.Sprint("key_", n-1))
+				hit = true
+			} else {
+				cache.Get(fmt.Sprint("key_", n))
+				hit = false
+			}
+		}
+	}
 }
