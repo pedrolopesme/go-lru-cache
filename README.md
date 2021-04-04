@@ -50,12 +50,12 @@ then you'll have both methods `Set` and `Get` available for usage.
 
 #### Set 
 ```golang
-cache.Set('my_key', myObj)
+cache.Set("my_key", myObj)
 ```
 
 #### Get 
 ```golang
-cachedObj := cache.Get('my_key')  // cachedObj will be nil if it wasnt available on cache
+cachedObj := cache.Get("my_key")  // cachedObj will be nil if it wasnt available on cache
 ```
 
 
